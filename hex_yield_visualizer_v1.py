@@ -4,6 +4,18 @@ import webbrowser
 import json
 import os
 
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+
+
 # Initialize Pygame
 pygame.init()
 pygame.mixer.init()
@@ -14,7 +26,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("HEX Yield Visualizer")
 
 # Set custom window icon
-icon = pygame.image.load("HEX.png")
+icon = pygame.image.load(resource_path("HEX.png"))
 pygame.display.set_icon(icon)
 
 # Colors
@@ -70,7 +82,7 @@ class InputBox:
         self.color = self.color_inactive
         self.text = str(coins_per_day)
         self.active = False
-        self.font = pygame.font.Font("arial.ttf", 26)
+        self.font = pygame.font.Font(resource_path("arial.ttf"), 26)
         self.cursor_pos = len(self.text)  # Cursor position
         self.cursor_visible = True
         self.cursor_timer = 0
@@ -190,7 +202,7 @@ class Checkbox:
         self.rect = pygame.Rect(x, y, size, size)
         self.label = label
         self.checked = sound_enabled
-        self.font = pygame.font.Font("arial.ttf", 26)
+        self.font = pygame.font.Font(resource_path("arial.ttf"), 26)
         self.size = size
 
     def handle_event(self, event):
@@ -237,7 +249,7 @@ class Slider:
         self.label = label
         self.dragging = False
         self.handle_radius = 10
-        self.font = pygame.font.Font("arial.ttf", 24)
+        self.font = pygame.font.Font(resource_path("arial.ttf"), 24)
 
     def handle_event(self, event):
         global volume
@@ -280,7 +292,7 @@ class LinkButton:
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
         self.url = url
-        self.font = pygame.font.Font("arial.ttf", 26)
+        self.font = pygame.font.Font(resource_path("arial.ttf"), 26)
         self.hovered = False
         self.color = BLUE
         self.hover_color = (100, 160, 220)
@@ -349,8 +361,8 @@ class SettingsMenu:
         self.x = (WIDTH - self.width) // 2
         self.y = (HEIGHT - self.height) // 2
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.font = pygame.font.Font("arial.ttf", 30)
-        self.title_font = pygame.font.Font("arial.ttf", 40)
+        self.font = pygame.font.Font(resource_path("arial.ttf"), 30)
+        self.title_font = pygame.font.Font(resource_path("arial.ttf"), 40)
 
         # Create input box positioned within the menu
         self.input_box = InputBox(self.x + 50, self.y + 115, 150, 40, "HEX yield per day:")
@@ -491,7 +503,7 @@ def load_settings():
 
 def load_coin_image():
     """Load coin image from file"""
-    image = pygame.image.load("HEX.png")
+    image = pygame.image.load(resource_path("HEX.png"))
     # Scale to reasonable size if needed
     if image.get_width() > 100 or image.get_height() > 100:
         image = pygame.transform.scale(image, (50, 50))
@@ -500,7 +512,7 @@ def load_coin_image():
 
 def load_piggy_bank_image():
     """Load piggy bank image from file"""
-    image = pygame.image.load("piggy_bank.png")
+    image = pygame.image.load(resource_path("piggy_bank.png"))
     # Scale to reasonable size if needed
     if image.get_width() > 200 or image.get_height() > 200:
         image = pygame.transform.scale(image, (150, 120))
@@ -509,7 +521,7 @@ def load_piggy_bank_image():
 
 def load_settings_button_image():
     """Load settings button image from file"""
-    image = pygame.image.load("settings_button.png")
+    image = pygame.image.load(resource_path("settings_button.png"))
     # Scale to reasonable size if needed (50x50 default)
     if image.get_width() > 60 or image.get_height() > 60:
         image = pygame.transform.scale(image, (50, 50))
@@ -518,7 +530,7 @@ def load_settings_button_image():
 
 def load_cha_ching_sound():
     """Load cha-ching sound from file"""
-    sound = pygame.mixer.Sound("cha_ching.wav")
+    sound = pygame.mixer.Sound(resource_path("cha_ching.wav"))
     sound.set_volume(volume)
     return sound
 
@@ -626,12 +638,16 @@ while running:
     piggy_rect = piggy_bank_image.get_rect(center=(PIGGY_BANK_X, PIGGY_BANK_Y))
     screen.blit(piggy_bank_image, piggy_rect)
 
+    # Draw piggy bank coin
+    coin_rect = coin_image.get_rect(center=(PIGGY_BANK_X, PIGGY_BANK_Y))
+    screen.blit(coin_image, coin_rect)
+
     # Draw coins
     for coin in coins:
         coin.draw(screen)
 
     # Draw counter
-    font = pygame.font.Font("impact.ttf", 36)
+    font = pygame.font.Font(resource_path("impact.ttf"), 36)
     counter_text = font.render(f"HEX Yield: {fallen_count}", True, WHITE)
     screen.blit(counter_text, (10, HEIGHT - 50))
 
