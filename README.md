@@ -1,3 +1,7 @@
+Make receiving HEX yield more fun! 
+The HEX Yield Visualizer allows HEX investors to see and hear when 
+they receive yield from HEX stakes!
+
 This app is free to use. Attribution would be appreciated but is not necessary.
 Feel free to use the app in videos, live streams, or on your website.
 The code is available to use and alter as you see fit.
